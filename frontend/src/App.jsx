@@ -30,7 +30,7 @@ export default function App() {
 
   const handleUpload = async () => {
     if (!file) {
-      setMessage('Choose a .tgz archive before uploading.')
+      setMessage('Choose a .tgz or .gz archive before uploading.')
       return
     }
 
@@ -118,7 +118,7 @@ export default function App() {
         <div className="upload-row">
           <label className="upload-input">
             <span>Archive (.tgz)</span>
-            <input type="file" accept=".tgz,.tar.gz" onChange={(e) => setFile(e.target.files?.[0] || null)} />
+            <input type="file" accept=".tgz,.tar.gz,.gz" onChange={(e) => setFile(e.target.files?.[0] || null)} />
           </label>
           <button onClick={handleUpload} disabled={uploading || !file}>
             {uploading ? 'Uploading...' : 'Upload Archive'}
