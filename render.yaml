@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: event-search-api
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --no-input
+    startCommand: python manage.py migrate --noinput && gunicorn event_search.wsgi:application --bind 0.0.0.0:$PORT
+    healthCheckPath: /admin/login/
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.4
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: event-search-api.onrender.com
+      - key: CORS_ALLOWED_ORIGINS
+        value: https://event-search-frontend.onrender.com
+
+  - type: web
+    name: event-search-frontend
+    runtime: static
+    plan: free
+    rootDir: frontend
+    buildCommand: npm ci && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: https://event-search-api.onrender.com
